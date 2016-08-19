@@ -7,28 +7,29 @@ import Parser.Token;
  */
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
 
-        Tokenizer tokenizer = new Tokenizer();
-        tokenizer.add("sin|cos|exp|ln|sqrt", 1); // function
-        tokenizer.add("\\(", 2); // open bracket
-        tokenizer.add("\\)", 3); // close bracket
-        tokenizer.add("[+-]", 4); // plus or minus
-        tokenizer.add("[*/]", 5); // mult or divide
-        tokenizer.add("\\^", 6); // raised
-        tokenizer.add("[0-9]+",7); // integer number
-        tokenizer.add("[a-zA-Z][a-zA-Z0-9_]*", 8); // variable
+        String exprstr = "2*(1+sin(pi/2))^2";
+        if (args.length>0) exprstr = args[0];
 
-        try {
-            tokenizer.tokenize(" sin(x) * (1 + var_12) ");
+        Parser parser = new Parser();
 
-            for (Token tok : tokenizer.getTokens()) {
-                System.out.println("" + tok.token + " " + tok.sequence);
-            }
+        try
+        {
+            ExpressionNode expr = parser.parse(exprstr);
+            expr.accept(new SetVariable("pi", Math.PI));
+            System.out.println("The value of the expression is "+expr.getValue());
+
         }
-        catch (ParserException e) {
+        catch (ParserException e)
+        {
             System.out.println(e.getMessage());
         }
-
+        catch (EvaluationException e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
     }
 }
