@@ -18,12 +18,12 @@ public class Parser {
         expression();
 
         if (lookahead.token != Token.EPSILON)
-            throw new ParserException("Unexpected symbol %s found", lookahead);
-
+            throw new ParserException("Unexpected symbol was found");
+            // throw new ParserException("Unexpected symbol %s found", this.lookahead);
     }
 
     private void nextToken() {
-        this.tokens.pop();
+        this.tokens.remove();
         // at the end of input we return an epsilon token
         if (this.tokens.isEmpty())
             lookahead = new Token(Token.EPSILON, "");
