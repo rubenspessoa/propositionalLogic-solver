@@ -23,4 +23,9 @@ public class ConstantExpressionNode implements ExpressionNode {
         return ExpressionNode.CONSTANT_NODE;
     }
 
+    public void accept(ExpressionNodeVisitor visitor)
+    {
+        visitor.visit(this);
+    }
+
 }

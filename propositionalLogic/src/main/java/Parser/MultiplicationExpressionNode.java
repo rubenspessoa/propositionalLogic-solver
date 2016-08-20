@@ -4,8 +4,7 @@ package Parser;
  * Created by rubenspessoa on 19/08/16.
  */
 
-public class MultiplicationExpressionNode
-        extends SequenceExpressionNode {
+public class MultiplicationExpressionNode extends SequenceExpressionNode {
 
     public MultiplicationExpressionNode() {
         super();
@@ -29,6 +28,13 @@ public class MultiplicationExpressionNode
                 prod /= t.expression.getValue();
         }
         return prod;
+    }
+
+    public void accept(ExpressionNodeVisitor visitor)
+    {
+        visitor.visit(this);
+        for (Term t: terms)
+            t.expression.accept(visitor);
     }
 }
 

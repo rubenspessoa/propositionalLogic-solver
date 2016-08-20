@@ -12,4 +12,6 @@ public interface ExpressionNode {
     public static final int FUNCTION_NODE = 6;
     public int getType();
     public double getValue() throws Exception;
+    public void accept(ExpressionNodeVisitor visitor);
+
 }

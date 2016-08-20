@@ -72,7 +72,7 @@ public class Parser
      * @return the internal representation of the expression in form of an
      *         expression tree made out of ExpressionNode objects
      */
-    public ExpressionNode parse(String expression)
+    public ExpressionNode parse(String expression) throws Exception
     {
         Tokenizer tokenizer = Tokenizer.getExpressionTokenizer();
         tokenizer.tokenize(expression);
@@ -89,7 +89,7 @@ public class Parser
      * @return the internal representation of the expression in form of an
      *         expression tree made out of ExpressionNode objects
      */
-    public ExpressionNode parse(LinkedList<Token> tokens)
+    public ExpressionNode parse(LinkedList<Token> tokens) throws Exception
     {
         // implementing a recursive descent parser
         this.tokens = (LinkedList<Token>) tokens.clone();
@@ -106,7 +106,7 @@ public class Parser
     }
 
     /** handles the non-terminal expression */
-    private ExpressionNode expression()
+    private ExpressionNode expression() throws Exception
     {
         // only one rule
         // expression -> signed_term sum_op
@@ -116,7 +116,7 @@ public class Parser
     }
 
     /** handles the non-terminal sum_op */
-    private ExpressionNode sumOp(ExpressionNode expr)
+    private ExpressionNode sumOp(ExpressionNode expr) throws Exception
     {
         // sum_op -> PLUSMINUS term sum_op
         if (lookahead.token == Token.PLUSMINUS)
@@ -143,7 +143,7 @@ public class Parser
     }
 
     /** handles the non-terminal signed_term */
-    private ExpressionNode signedTerm()
+    private ExpressionNode signedTerm() throws Exception
     {
         // signed_term -> PLUSMINUS term
         if (lookahead.token == Token.PLUSMINUS)
@@ -162,7 +162,7 @@ public class Parser
     }
 
     /** handles the non-terminal term */
-    private ExpressionNode term()
+    private ExpressionNode term() throws Exception
     {
         // term -> factor term_op
         ExpressionNode f = factor();
@@ -170,7 +170,7 @@ public class Parser
     }
 
     /** handles the non-terminal term_op */
-    private ExpressionNode termOp(ExpressionNode expression)
+    private ExpressionNode termOp(ExpressionNode expression) throws Exception
     {
         // term_op -> MULTDIV factor term_op
         if (lookahead.token == Token.MULTDIV)
@@ -198,7 +198,7 @@ public class Parser
     }
 
     /** handles the non-terminal signed_factor */
-    private ExpressionNode signedFactor()
+    private ExpressionNode signedFactor() throws Exception
     {
         // signed_factor -> PLUSMINUS factor
         if (lookahead.token == Token.PLUSMINUS)
@@ -217,7 +217,7 @@ public class Parser
     }
 
     /** handles the non-terminal factor */
-    private ExpressionNode factor()
+    private ExpressionNode factor() throws Exception
     {
         // factor -> argument factor_op
         ExpressionNode a = argument();
@@ -227,7 +227,7 @@ public class Parser
 
 
     /** handles the non-terminal factor_op */
-    private ExpressionNode factorOp(ExpressionNode expr)
+    private ExpressionNode factorOp(ExpressionNode expr) throws Exception
     {
         // factor_op -> RAISED expression
         if (lookahead.token == Token.RAISED)
@@ -243,8 +243,7 @@ public class Parser
     }
 
     /** handles the non-terminal argument */
-    private ExpressionNode argument()
-    {
+    private ExpressionNode argument() throws Exception {
         // argument -> FUNCTION argument
         if (lookahead.token == Token.FUNCTION)
         {
@@ -259,7 +258,7 @@ public class Parser
             nextToken();
             ExpressionNode expr = expression();
             if (lookahead.token != Token.CLOSE_BRACKET)
-                throw new ParserException("Closing brackets expected", lookahead);
+                throw new ParserException("Closing brackets expected");
             nextToken();
             return expr;
         }

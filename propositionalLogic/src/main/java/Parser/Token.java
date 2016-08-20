@@ -15,14 +15,28 @@ public class Token {
     public static final int NUMBER = 7;
     public static final int VARIABLE = 8;
 
+    /** the token identifier */
     public final int token;
+    /** the string that the token was created from */
     public final String sequence;
+    /** the position of the token in the input string */
+    public final int pos;
 
-    public Token(int token, String sequence) {
+    /**
+     * Construct the token with its values
+     * @param token the token identifier
+     * @param sequence the string that the token was created from
+     * @param pos the position of the token in the input string
+     */
+    public Token(int token, String sequence, int pos)
+    {
         super();
         this.token = token;
         this.sequence = sequence;
+        this.pos = pos;
     }
+
+
 
 
 }

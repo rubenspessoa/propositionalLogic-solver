@@ -34,5 +34,14 @@ public class VariableExpressionNode implements ExpressionNode {
         }
     }
 
+    public String getName()
+    {
+        return name;
+    }
+
+    public void accept(ExpressionNodeVisitor visitor)
+    {
+        visitor.visit(this);
+    }
 
 }

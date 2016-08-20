@@ -1,6 +1,4 @@
-import Parser.Tokenizer;
-import Parser.ParserException;
-import Parser.Token;
+import Parser.*;
 
 /**
  * Created by rubenspessoa on 06/08/16.
@@ -30,6 +28,8 @@ public class Main {
         {
             System.out.println(e.getMessage());
         }
-    }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
