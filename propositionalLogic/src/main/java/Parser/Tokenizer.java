@@ -8,10 +8,6 @@ import java.util.regex.Matcher;
  * Created by rubenspessoa on 06/08/16.
  */
 
-import java.util.LinkedList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * A class for reading an input string and separating it into tokens that can be
  * fed into Parser.
