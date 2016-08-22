@@ -1,16 +1,36 @@
+/*
+ * This software and all files contained in it are distrubted under the MIT license.
+ *
+ * Copyright (c) 2013 Cogito Learning Ltd
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+/*
+ * Modified by rubenspessoa on 06/08/16.
+ */
+
 package Parser;
 
 import java.util.LinkedList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-
-/**
- * Created by rubenspessoa on 06/08/16.
- */
-
-import java.util.LinkedList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * A class for reading an input string and separating it into tokens that can be
@@ -21,58 +41,45 @@ import java.util.regex.Pattern;
  * end-of-string anchors or any capturing groups as these will be added by the
  * tokenizer itslef.
  */
-public class Tokenizer
-{
+public class Tokenizer {
+
     /**
      * Internal class holding the information about a token type.
      */
-    private class TokenInfo
-    {
-        /** the regular expression to match against */
+
+    private class TokenInfo {
+
         public final Pattern regex;
-        /** the token id that the regular expression is linked to */
         public final int token;
 
         /**
          * Construct TokenInfo with its values
          */
-        public TokenInfo(Pattern regex, int token)
-        {
+        public TokenInfo(Pattern regex, int token) {
             super();
             this.regex = regex;
             this.token = token;
         }
     }
 
-    /**
-     * a list of TokenInfo objects
-     *
-     * Each token type corresponds to one entry in the list
-     */
     private LinkedList<TokenInfo> tokenInfos;
-
-    /** the list of tokens produced when tokenizing the input */
     private LinkedList<Token> tokens;
-
-    /** a tokenizer that can handle mathematical expressions */
     private static Tokenizer expressionTokenizer = null;
 
     /**
      * Default constructor
      */
-    public Tokenizer()
-    {
+    public Tokenizer() {
         super();
         tokenInfos = new LinkedList<TokenInfo>();
         tokens = new LinkedList<Token>();
     }
 
     /**
-     * A static method that returns a tokenizer for mathematical expressions
-     * @return a tokenizer that can handle mathematical expressions
+     * A static method that returns a tokenizer for logical expressions
+     * @return a tokenizer that can handle logical expressions
      */
-    public static Tokenizer getExpressionTokenizer()
-    {
+    public static Tokenizer getExpressionTokenizer() {
         if (expressionTokenizer == null)
             expressionTokenizer = createExpressionTokenizer();
         return expressionTokenizer;
@@ -86,9 +93,10 @@ public class Tokenizer
     {
         Tokenizer tokenizer = new Tokenizer();
 
-        tokenizer.add("[+-]", Token.PLUSMINUS);
-        tokenizer.add("[*/]", Token.MULTDIV);
-        tokenizer.add("\\^", Token.RAISED);
+        tokenizer.add("\\^", Token.CONJ);
+        tokenizer.add("v", Token.DISJ);
+        tokenizer.add("->", Token.CONSEQ);
+        tokenizer.add("<->", Token.BICONSEQ);
 
         String funcs = FunctionExpressionNode.getAllFunctions();
         tokenizer.add("(" + funcs + ")(?!\\w)", Token.FUNCTION);

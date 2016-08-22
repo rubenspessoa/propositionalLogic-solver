@@ -1,4 +1,8 @@
 /*
+    TODO Analyse this license.
+ */
+
+/*
  * This software and all files contained in it are distrubted under the MIT license.
  * 
  * Copyright (c) 2013 Cogito Learning Ltd
@@ -21,6 +25,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+// TODO Refactor docs.
 
 /**
  * @mainpage
@@ -99,11 +105,13 @@ public class Parser
         ExpressionNode expr = expression();
 
         if (lookahead.token != Token.EPSILON)
-            throw new ParserException("Unexpected symbol %s found");
+            throw new ParserException("Unexpected symbol found");
             //throw new ParserException("Unexpected symbol %s found", lookahead);
 
         return expr;
     }
+
+
 
     /** handles the non-terminal expression */
     private ExpressionNode expression() throws Exception
