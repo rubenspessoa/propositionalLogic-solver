@@ -14,6 +14,7 @@ public class Token {
     public static final int CLOSE_BRACKET = 6;
     public static final int BOOL = 7;
     public static final int VARIABLE = 8;
+    public static final int NEG = 9;
 
     public final int token;
     public final String sequence;

@@ -86,25 +86,22 @@ public class Tokenizer {
     }
 
     /**
-     * A static method that actually creates a tokenizer for mathematical expressions
+     * A static method that actually creates a tokenizer for logical expressions
      * @return a tokenizer that can handle mathematical expressions
      */
-    private static Tokenizer createExpressionTokenizer()
-    {
+    private static Tokenizer createExpressionTokenizer() {
+
         Tokenizer tokenizer = new Tokenizer();
 
-        tokenizer.add("\\^", Token.CONJ);
-        tokenizer.add("v", Token.DISJ);
-        tokenizer.add("->", Token.CONSEQ);
-        tokenizer.add("<->", Token.BICONSEQ);
-
-        String funcs = FunctionExpressionNode.getAllFunctions();
-        tokenizer.add("(" + funcs + ")(?!\\w)", Token.FUNCTION);
-
-        tokenizer.add("\\(", Token.OPEN_BRACKET);
-        tokenizer.add("\\)", Token.CLOSE_BRACKET);
-        tokenizer.add("(?:\\d+\\.?|\\.\\d)\\d*(?:[Ee][-+]?\\d+)?", Token.NUMBER);
-        tokenizer.add("[a-zA-Z]\\w*", Token.VARIABLE);
+        tokenizer.add("ˆ", Token.CONJ); //1
+        tokenizer.add("v", Token.DISJ); //2
+        tokenizer.add("->", Token.CONSEQ); //3
+        tokenizer.add("<->", Token.BICONSEQ); //4
+        tokenizer.add("¬", Token.NEG); //9
+        tokenizer.add("\\(", Token.OPEN_BRACKET); //5
+        tokenizer.add("\\)", Token.CLOSE_BRACKET); //6
+        tokenizer.add("(\\btrue\\b|\\bfalse\\b)", Token.BOOL); //7
+        tokenizer.add("[a-zA-Z]\\w*", Token.VARIABLE); //8
 
         return tokenizer;
     }
@@ -114,8 +111,7 @@ public class Tokenizer {
      * @param regex the regular expression to match against
      * @param token the token id that the regular expression is linked to
      */
-    public void add(String regex, int token)
-    {
+    public void add(String regex, int token) {
         tokenInfos.add(new TokenInfo(Pattern.compile("^(" + regex+")"), token));
     }
 
@@ -126,31 +122,35 @@ public class Tokenizer {
      *
      * @param str the string to tokenize
      */
-    public void tokenize(String str)
-    {
+    public void tokenize(String str) {
+
         String s = str.trim();
         int totalLength = s.length();
         tokens.clear();
-        while (!s.equals(""))
-        {
+
+        while (!s.equals("")) {
+
             int remaining = s.length();
             boolean match = false;
-            for (TokenInfo info : tokenInfos)
-            {
+
+            for (TokenInfo info : tokenInfos) {
+
                 Matcher m = info.regex.matcher(s);
-                if (m.find())
-                {
+
+                if (m.find()) {
                     match = true;
                     String tok = m.group().trim();
-                    // System.out.println("Success matching " + s + " against " +
-                    // info.regex.pattern() + " : " + tok);
+                    /* Debugging
+                    System.out.println("Success matching " + s + " against " +
+                    info.regex.pattern() + " : " + tok);
+                    */
                     s = m.replaceFirst("").trim();
                     tokens.add(new Token(info.token, tok, totalLength - remaining));
                     break;
                 }
             }
-            if (!match)
-                throw new ParserException("Unexpected character in input: " + s);
+
+            if (!match) throw new ParserException("Unexpected character in input: " + s);
         }
     }
 
@@ -158,9 +158,8 @@ public class Tokenizer {
      * Get the tokens generated in the last call to tokenize.
      * @return a list of tokens to be fed to Parser
      */
-    public LinkedList<Token> getTokens()
-    {
+
+    public LinkedList<Token> getTokens() {
         return tokens;
     }
-
 }
