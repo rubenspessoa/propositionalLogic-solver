@@ -27,21 +27,23 @@ package Parser.AbstractSyntaxTree;
 /**
  * Created by rubenspessoa on 27/08/16.
  */
+public class BiconsequenceExpressionNode implements ExpressionNode {
 
-public class NegationExpressionNode implements ExpressionNode {
+    private ExpressionNode leftTerm;
+    private ExpressionNode rightTerm;
 
-    private ExpressionNode expression;
-
-    public NegationExpressionNode() {
-        super();
+    public BiconsequenceExpressionNode(ExpressionNode leftTerm, ExpressionNode rightTerm) {
+        this.leftTerm = leftTerm;
+        this.rightTerm = rightTerm;
     }
 
     public int getType() {
-        return ExpressionNode.NEG_NODE;
+        return ExpressionNode.BICONSEQ_NODE;
     }
 
-    @Override
     public boolean getValue() throws Exception {
-        return (!this.expression.getValue());
+        return (!leftTerm.getValue() || rightTerm.getValue())
+                && (!rightTerm.getValue() || leftTerm.getValue());
     }
+
 }

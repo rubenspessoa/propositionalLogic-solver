@@ -28,8 +28,6 @@
 
 package Parser.AbstractSyntaxTree;
 
-import Parser.Parser;
-
 public interface ExpressionNode {
 
     public static final int VARIABLE_NODE = 1;
