@@ -26,10 +26,33 @@
  * Modified by rubenspessoa on 06/08/16.
  */
 
-package Parser;
+package Parser.AbstractSyntaxTree;
 
-public class ParserException extends RuntimeException {
-    public ParserException(String msg) {
-        super(msg);
+public class VariableExpressionNode implements ExpressionNode {
+    private String name;
+    private boolean value;
+    // TODO: Evaluate the need for this variable "valueSet" and the possibility of setting a value for variables.
+    private boolean valueSet;
+
+    public VariableExpressionNode(String name) {
+        this.name = name;
+        valueSet = false;
+    }
+
+    public int getType() {
+        return ExpressionNode.VARIABLE_NODE;
+    }
+
+    public void setValue(boolean value) {
+        this.value = value;
+        this.valueSet = true;
+    }
+
+    public boolean getValue() {
+        if (valueSet)
+            return this.value;
+        else
+            throw new EvaluationException("Variable '"
+                    + name + "' was not initialized.");
     }
 }

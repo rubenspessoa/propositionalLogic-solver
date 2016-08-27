@@ -1,7 +1,7 @@
 /*
- * This software and all files contained in it are distrubted under the MIT license.
+ * This software and all files contained in it are distributed under the MIT license.
  *
- * Copyright (c) 2013 Cogito Learning Ltd
+ * Copyright (c) 2016 BARROS FILHO, Rubens
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,14 +22,11 @@
  * THE SOFTWARE.
  */
 
-/*
- * Modified by rubenspessoa on 06/08/16.
+package Parser.AbstractSyntaxTree;
+
+/**
+ * Created by rubenspessoa on 27/08/16.
  */
-
-package Parser;
-
-public class ParserException extends RuntimeException {
-    public ParserException(String msg) {
-        super(msg);
-    }
+public class NegationExpressionNode implements ExpressionNode {
+    
 }

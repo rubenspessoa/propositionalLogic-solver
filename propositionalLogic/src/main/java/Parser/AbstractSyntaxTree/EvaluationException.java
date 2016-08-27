@@ -26,10 +26,19 @@
  * Modified by rubenspessoa on 06/08/16.
  */
 
-package Parser;
+package Parser.AbstractSyntaxTree;
 
-public class ParserException extends RuntimeException {
-    public ParserException(String msg) {
-        super(msg);
+import Parser.Parser;
+
+public class EvaluationException extends RuntimeException {
+    private static final long serialVersionUID = 4794094610927358603L;
+
+    /**
+     * Construct the evaluation exception with a message.
+     * @param message the message containing the cause of the exception
+     */
+    public EvaluationException(String message)
+    {
+        super(message);
     }
 }

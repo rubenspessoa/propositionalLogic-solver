@@ -22,18 +22,17 @@
  * THE SOFTWARE.
  */
 
-/**
+/*
  * Modified by rubenspessoa on 06/08/16.
  */
 
 /**
  * @mainpage
- * This Parser is a modification of CogPar (a versatile parser for mathematical expressions) in order
+ * This Parser is a modification of CogPar (a versatile parser for mathematical expressions) which aims
  * to work with logical sentences.
  *
- * CogPar is distributed under the MIT license, so feel free to use it in your own projects.
- *
- * To download CogPar, <a href="" alt="Download CogPar">follow this link.</a>
+ * CogPar and this variation of Cogpar are distributed under the MIT license,
+ * so feel free to use it in your own projects.
  */
 
 package Parser;
@@ -48,10 +47,10 @@ import java.util.LinkedList;
  * Parsing is implemented in the form of a recursive descent parser.
  *
  */
+
 public class Parser {
 
     LinkedList<Token> tokens;
-    /** the next token */
     Token lookahead;
 
     /**
@@ -83,7 +82,7 @@ public class Parser {
      * @return the internal representation of the expression in form of an
      *         expression tree made out of ExpressionNode objects
      */
-    public void parse(LinkedList<Token> tokens) throws Exception {
+    private void parse(LinkedList<Token> tokens) throws Exception {
 
         // implementing a recursive descent parser
         this.tokens = (LinkedList<Token>) tokens.clone();
@@ -126,6 +125,8 @@ public class Parser {
             argument();
         // argument -> VARIABLE
         } else if (lookahead.token == Token.VARIABLE) {
+            nextToken();
+        } else if (lookahead.token == Token.BOOL) {
             nextToken();
         // argument -> OPENBRACKET expression CLOSEBRACKET
         } else if (lookahead.token == Token.OPEN_BRACKET) {

@@ -26,10 +26,34 @@
  * Modified by rubenspessoa on 06/08/16.
  */
 
-package Parser;
+package Parser.AbstractSyntaxTree;
 
-public class ParserException extends RuntimeException {
-    public ParserException(String msg) {
-        super(msg);
+import java.util.LinkedList;
+
+public abstract class SequenceExpressionNode implements ExpressionNode {
+
+    public class Term {
+
+        public ExpressionNode expression;
+
+        public Term(ExpressionNode expression) {
+            super();
+            this.expression = expression;
+        }
+    }
+
+    protected LinkedList<Term> terms;
+
+    public SequenceExpressionNode() {
+        this.terms = new LinkedList<Term>();
+    }
+
+    public SequenceExpressionNode(ExpressionNode a) {
+        this.terms = new LinkedList<Term>();
+        this.terms.add(new Term(a));
+    }
+
+    public void add(ExpressionNode a) {
+        this.terms.add(new Term(a));
     }
 }

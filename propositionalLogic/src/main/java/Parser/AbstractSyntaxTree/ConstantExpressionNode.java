@@ -26,10 +26,24 @@
  * Modified by rubenspessoa on 06/08/16.
  */
 
-package Parser;
+package Parser.AbstractSyntaxTree;
 
-public class ParserException extends RuntimeException {
-    public ParserException(String msg) {
-        super(msg);
+public class ConstantExpressionNode implements ExpressionNode {
+    private boolean value;
+
+    public ConstantExpressionNode(boolean value) {
+        this.value = value;
+    }
+
+    public ConstantExpressionNode(String value) {
+        this.value = Boolean.valueOf(value);
+    }
+
+    public boolean getValue() {
+        return this.value;
+    }
+
+    public int getType() {
+        return ExpressionNode.CONSTANT_NODE;
     }
 }
