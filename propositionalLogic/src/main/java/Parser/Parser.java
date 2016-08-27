@@ -55,7 +55,7 @@ public class Parser {
     Token lookahead;
 
     /**
-     * Parse a mathematical expression in a string and return an ExpressionNode.
+     * Parse a logical expression in a string and return an ExpressionNode.
      *
      * This is a convenience method that first converts the string into a linked
      * list of tokens using the expression tokenizer provided by the Tokenizer
@@ -67,16 +67,15 @@ public class Parser {
      *         expression tree made out of ExpressionNode objects
      */
 
-//    public ExpressionNode parse(String expression) throws Exception
-//    {
-//        Tokenizer tokenizer = Tokenizer.getExpressionTokenizer();
-//        tokenizer.tokenize(expression);
-//        LinkedList<Token> tokens = tokenizer.getTokens();
-//        return this.parse(tokens);
-//    }
+    public void parse(String expression) throws Exception {
+        Tokenizer tokenizer = Tokenizer.getExpressionTokenizer();
+        tokenizer.tokenize(expression);
+        LinkedList<Token> tokens = tokenizer.getTokens();
+        this.parse(tokens);
+    }
 
     /**
-     * Parse a mathematical expression in contained in a list of tokens and return
+     * Parse a logical expression contained in a list of tokens and return
      * an ExpressionNode.
      *
      * @param tokens
@@ -84,222 +83,132 @@ public class Parser {
      * @return the internal representation of the expression in form of an
      *         expression tree made out of ExpressionNode objects
      */
-//
-//    public ExpressionNode parse(LinkedList<Token> tokens) throws Exception
-//    {
-//        // implementing a recursive descent parser
-//        this.tokens = (LinkedList<Token>) tokens.clone();
-//        lookahead = this.tokens.getFirst();
-//
-//        // top level non-terminal is expression
-//        ExpressionNode expr = expression();
-//
-//        if (lookahead.token != Token.EPSILON)
-//            throw new ParserException("Unexpected symbol found");
-//            //throw new ParserException("Unexpected symbol %s found", lookahead);
-//
-//        return expr;
-//    }
+    public void parse(LinkedList<Token> tokens) throws Exception {
 
-//
-//    /** handles the non-terminal expression */
-//    private ExpressionNode expression() throws Exception
-//    {
-//        // only one rule
-//        // expression -> signed_term sum_op
-//        ExpressionNode expr = signedTerm();
-//        expr = sumOp(expr);
-//        return expr;
-//    }
-//
-//    /** handles the non-terminal sum_op */
-//    private ExpressionNode sumOp(ExpressionNode expr) throws Exception
-//    {
-//        // sum_op -> PLUSMINUS term sum_op
-//        if (lookahead.token == Token.PLUSMINUS)
-//        {
-//            AdditionExpressionNode sum;
-//            // This means we are actually dealing with a sum
-//            // If expr is not already a sum, we have to create one
-//            if (expr.getType() == ExpressionNode.ADDITION_NODE)
-//                sum = (AdditionExpressionNode) expr;
-//            else
-//                sum = new AdditionExpressionNode(expr, true);
-//
-//            // reduce the input and recursively call sum_op
-//            boolean positive = lookahead.sequence.equals("+");
-//            nextToken();
-//            ExpressionNode t = term();
-//            sum.add(t, positive);
-//
-//            return sumOp(sum);
-//        }
-//
-//        // sum_op -> EPSILON
-//        return expr;
-//    }
-//
-//    /** handles the non-terminal signed_term */
-//    private ExpressionNode signedTerm() throws Exception
-//    {
-//        // signed_term -> PLUSMINUS term
-//        if (lookahead.token == Token.PLUSMINUS)
-//        {
-//            boolean positive = lookahead.sequence.equals("+");
-//            nextToken();
-//            ExpressionNode t = term();
-//            if (positive)
-//                return t;
-//            else
-//                return new AdditionExpressionNode(t, false);
-//        }
-//
-//        // signed_term -> term
-//        return term();
-//    }
-//
-//    /** handles the non-terminal term */
-//    private ExpressionNode term() throws Exception
-//    {
-//        // term -> factor term_op
-//        ExpressionNode f = factor();
-//        return termOp(f);
-//    }
-//
-//    /** handles the non-terminal term_op */
-//    private ExpressionNode termOp(ExpressionNode expression) throws Exception
-//    {
-//        // term_op -> MULTDIV factor term_op
-//        if (lookahead.token == Token.MULTDIV)
-//        {
-//            MultiplicationExpressionNode prod;
-//
-//            // This means we are actually dealing with a product
-//            // If expr is not already a PRODUCT, we have to create one
-//            if (expression.getType() == ExpressionNode.MULTIPLICATION_NODE)
-//                prod = (MultiplicationExpressionNode) expression;
-//            else
-//                prod = new MultiplicationExpressionNode(expression, true);
-//
-//            // reduce the input and recursively call sum_op
-//            boolean positive = lookahead.sequence.equals("*");
-//            nextToken();
-//            ExpressionNode f = signedFactor();
-//            prod.add(f, positive);
-//
-//            return termOp(prod);
-//        }
-//
-//        // term_op -> EPSILON
-//        return expression;
-//    }
-//
-//    /** handles the non-terminal signed_factor */
-//    private ExpressionNode signedFactor() throws Exception
-//    {
-//        // signed_factor -> PLUSMINUS factor
-//        if (lookahead.token == Token.PLUSMINUS)
-//        {
-//            boolean positive = lookahead.sequence.equals("+");
-//            nextToken();
-//            ExpressionNode t = factor();
-//            if (positive)
-//                return t;
-//            else
-//                return new AdditionExpressionNode(t, false);
-//        }
-//
-//        // signed_factor -> factor
-//        return factor();
-//    }
-//
-//    /** handles the non-terminal factor */
-//    private ExpressionNode factor() throws Exception
-//    {
-//        // factor -> argument factor_op
-//        ExpressionNode a = argument();
-//        return factorOp(a);
-//    }
-//
-//
-//
-//    /** handles the non-terminal factor_op */
-//    private ExpressionNode factorOp(ExpressionNode expr) throws Exception
-//    {
-//        // factor_op -> RAISED expression
-//        if (lookahead.token == Token.RAISED)
-//        {
-//            nextToken();
-//            ExpressionNode exponent = signedFactor();
-//
-//            return new ExponentiationExpressionNode(expr, exponent);
-//        }
-//
-//        // factor_op -> EPSILON
-//        return expr;
-//    }
-//
-//    /** handles the non-terminal argument */
-//    private ExpressionNode argument() throws Exception {
-//        // argument -> FUNCTION argument
-//        if (lookahead.token == Token.FUNCTION)
-//        {
-//            int function = FunctionExpressionNode.stringToFunction(lookahead.sequence);
-//            nextToken();
-//            ExpressionNode expr = argument();
-//            return new FunctionExpressionNode(function, expr);
-//        }
-//        // argument -> OPEN_BRACKET sum CLOSE_BRACKET
-//        else if (lookahead.token == Token.OPEN_BRACKET)
-//        {
-//            nextToken();
-//            ExpressionNode expr = expression();
-//            if (lookahead.token != Token.CLOSE_BRACKET)
-//                throw new ParserException("Closing brackets expected");
-//            nextToken();
-//            return expr;
-//        }
-//
-//        // argument -> value
-//        return value();
-//    }
-//
-//    /** handles the non-terminal value */
-//    private ExpressionNode value() throws Exception
-//    {
-//        // argument -> NUMBER
-//        if (lookahead.token == Token.NUMBER)
-//        {
-//            ExpressionNode expr = new ConstantExpressionNode(lookahead.sequence);
-//            nextToken();
-//            return expr;
-//        }
-//
-//        // argument -> VARIABLE
-//        if (lookahead.token == Token.VARIABLE)
-//        {
-//            ExpressionNode expr = new VariableExpressionNode(lookahead.sequence);
-//            nextToken();
-//            return expr;
-//        }
-//
-//        if (lookahead.token == Token.EPSILON)
-//            throw new ParserException("Unexpected end of input");
-//        else
-//            throw new ParserException("Unexpected symbol %s found");
-//            //throw new ParserException("Unexpected symbol %s found", lookahead);
-//    }
-//
-//    /**
-//     * Remove the first token from the list and store the next token in lookahead
-//     */
-//    private void nextToken()
-//    {
-//        tokens.pop();
-//        // at the end of input we return an epsilon token
-//        if (tokens.isEmpty())
-//            lookahead = new Token(Token.EPSILON, "", -1);
-//        else
-//            lookahead = tokens.getFirst();
-//    }
+        // implementing a recursive descent parser
+        this.tokens = (LinkedList<Token>) tokens.clone();
+        lookahead = this.tokens.getFirst();
+
+        // top level non-terminal is expression
+        expression();
+
+        if (lookahead.token != Token.EPSILON)
+            throw new ParserException("Unexpected symbol" + lookahead + "found");
+
+    }
+
+    /** handles the non-terminal expression */
+    private void expression() throws Exception {
+        // only one rule
+        // expression -> argument bicons_op
+        argument();
+        biconsOp();
+    }
+
+    /** handles the non-terminal bicons */
+    private void biconsOp() throws Exception {
+        // biconsOp -> BICONSEQ cons biconsOp
+        if (lookahead.token == Token.BICONSEQ) {
+            nextToken();
+            cons();
+            biconsOp();
+        } else {
+            cons();
+        }
+
+    }
+
+    /** handles the non-terminal argument */
+    private void argument() throws Exception {
+        // argument -> NEG argument
+        if (lookahead.token == Token.NEG) {
+            nextToken();
+            argument();
+        // argument -> VARIABLE
+        } else if (lookahead.token == Token.VARIABLE) {
+            nextToken();
+        // argument -> OPENBRACKET expression CLOSEBRACKET
+        } else if (lookahead.token == Token.OPEN_BRACKET) {
+
+            nextToken();
+            expression();
+
+            if (lookahead.token != Token.CLOSE_BRACKET) {
+                throw new ParserException("Closing brackets expected and" + lookahead.sequence + "found instead.");
+            }
+
+            nextToken();
+        } else {
+            // argument -> EPSILON
+        }
+    }
+
+    /** handles the non-terminal cons */
+    private void cons() throws Exception {
+        // cons -> disj consOp
+        disj();
+        consOp();
+    }
+
+    /** handles the non-terminal consOp */
+    private void consOp() throws Exception {
+        // consOp -> CONSEQ disj consOp
+        if (lookahead.token == Token.CONSEQ) {
+            nextToken();
+            disj();
+            consOp();
+        } else {
+            disj();
+        }
+    }
+
+    /** handles the non-terminal disj */
+    private void disj() throws Exception {
+        // disj -> conj disjOp
+        conj();
+        disjOp();
+    }
+
+    /** handles the non-terminal disjOp */
+    private void disjOp() throws Exception {
+        // disjOp -> DISJ conj disjOp
+        if (lookahead.token == Token.DISJ) {
+            nextToken();
+            conj();
+            disjOp();
+        } else {
+            conj();
+        }
+    }
+
+    /** handles the non-terminal conj */
+    private void conj() throws Exception {
+        argument();
+        conjOp();
+    }
+
+    /** handles the non-terminal conjOp */
+    private void conjOp() throws Exception {
+        // conjOp -> CONJ argument conjOp
+        if (lookahead.token == Token.CONJ) {
+            nextToken();
+            argument();
+            conjOp();
+        } else {
+            argument();
+        }
+    }
+
+    /**
+     * Remove the first token from the list and store the next token in lookahead
+     */
+    private void nextToken() {
+
+        tokens.pop();
+
+        if (tokens.isEmpty())
+            lookahead = new Token(Token.EPSILON, "", -1);
+        else
+            lookahead = tokens.getFirst();
+    }
 }
