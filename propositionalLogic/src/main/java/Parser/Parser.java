@@ -100,7 +100,7 @@ public class Parser {
     private void expression() throws Exception {
         // only one rule
         // expression -> argument bicons_op
-        argument();
+        cons();
         biconsOp();
     }
 
@@ -112,9 +112,8 @@ public class Parser {
             cons();
             biconsOp();
         } else {
-            cons();
+            // EPSILON
         }
-
     }
 
     /** handles the non-terminal argument */
@@ -135,13 +134,44 @@ public class Parser {
             expression();
 
             if (lookahead.token != Token.CLOSE_BRACKET) {
+                throw new ParserException("Closing brackets expected and '" + lookahead.sequence + "' found instead.");
+            }
+
+            nextToken();
+        }
+        /*
+        // argument -> NEG argument
+        if (lookahead.token == Token.NEG) {
+            ExpressionNode neg = new NegationExpressionNode();
+            nextToken();
+            argument();
+            return neg;
+        // argument -> VARIABLE
+        } else if (lookahead.token == Token.VARIABLE) {
+            ExpressionNode var = new VariableExpressionNode();
+            nextToken();
+            return var;
+        } else if (lookahead.token == Token.BOOL) {
+            ExpressionNode var = new ConstantExpressionNode();
+            nextToken();
+            return var;
+        // argument -> OPENBRACKET expression CLOSEBRACKET
+        } else if (lookahead.token == Token.OPEN_BRACKET) {
+
+            ExpressionNode expr = expression();
+            nextToken();
+            expression();
+
+            if (lookahead.token != Token.CLOSE_BRACKET) {
                 throw new ParserException("Closing brackets expected and" + lookahead.sequence + "found instead.");
             }
 
             nextToken();
+            return expr;
         } else {
             // argument -> EPSILON
         }
+         */
     }
 
     /** handles the non-terminal cons */
@@ -159,7 +189,7 @@ public class Parser {
             disj();
             consOp();
         } else {
-            disj();
+
         }
     }
 
@@ -178,7 +208,7 @@ public class Parser {
             conj();
             disjOp();
         } else {
-            conj();
+
         }
     }
 
@@ -196,7 +226,7 @@ public class Parser {
             argument();
             conjOp();
         } else {
-            argument();
+
         }
     }
 
