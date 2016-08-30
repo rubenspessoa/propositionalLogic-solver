@@ -8,22 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        /* Testing the Tokenizer */
-
-        Tokenizer tokenizer = Tokenizer.getExpressionTokenizer();
-
         String inputTest = "(A voi) v C -> ( D <-> B ) ";
-
-        try {
-            tokenizer.tokenize(inputTest);
-
-            for (Token tok : tokenizer.getTokens()) {
-                System.out.println("" + tok.token + " " + tok.sequence);
-            }
-        }
-        catch (ParserException e) {
-            System.out.println(e.getMessage());
-        }
 
         /* Testing the Parser */
 
