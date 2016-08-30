@@ -40,6 +40,6 @@ public interface ExpressionNode {
 
     public int getType();
     public boolean getValue() throws Exception;
-    //public void accept(ExpressionNodeVisitor visitor);
+    public void accept(ExpressionNodeVisitor visitor);
 
 }

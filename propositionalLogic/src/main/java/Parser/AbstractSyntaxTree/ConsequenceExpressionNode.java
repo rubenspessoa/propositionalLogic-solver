@@ -27,6 +27,7 @@ package Parser.AbstractSyntaxTree;
 /**
  * Created by rubenspessoa on 27/08/16.
  */
+
 public class ConsequenceExpressionNode implements ExpressionNode {
 
     private ExpressionNode assumption;
@@ -44,6 +45,12 @@ public class ConsequenceExpressionNode implements ExpressionNode {
 
     public boolean getValue() throws Exception {
         return (!assumption.getValue() || consequent.getValue());
+    }
+
+    public void accept(ExpressionNodeVisitor visitor) {
+        visitor.visit(this);
+        assumption.accept(visitor);
+        consequent.accept(visitor);
     }
 
 }

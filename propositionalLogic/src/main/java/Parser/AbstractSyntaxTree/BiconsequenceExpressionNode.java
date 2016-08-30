@@ -46,4 +46,10 @@ public class BiconsequenceExpressionNode implements ExpressionNode {
                 && (!rightTerm.getValue() || leftTerm.getValue());
     }
 
+    public void accept(ExpressionNodeVisitor visitor) {
+        visitor.visit(this);
+        leftTerm.accept(visitor);
+        rightTerm.accept(visitor);
+    }
+
 }

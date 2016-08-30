@@ -1,7 +1,7 @@
 /*
- * This software and all files contained in it are distrubted under the MIT license.
+ * This software and all files contained in it are distributed under the MIT license.
  *
- * Copyright (c) 2013 Cogito Learning Ltd
+ * Copyright (c) 2016 BARROS FILHO, Rubens
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,47 +22,20 @@
  * THE SOFTWARE.
  */
 
-/*
- * Modified by rubenspessoa on 06/08/16.
- */
-
 package Parser.AbstractSyntaxTree;
 
-public class VariableExpressionNode implements ExpressionNode {
+/**
+ * Created by rubenspessoa on 30/08/16.
+ */
 
-    private String name;
-    private boolean value;
-    // TODO: Evaluate the need for this variable "valueSet" and the possibility of setting a value for variables.
-    private boolean valueSet;
+public interface ExpressionNodeVisitor {
 
-    public VariableExpressionNode(String name) {
-        this.name = name;
-        valueSet = false;
-    }
-
-    public int getType() {
-        return ExpressionNode.VARIABLE_NODE;
-    }
-
-    public void setValue(boolean value) {
-        this.value = value;
-        this.valueSet = true;
-    }
-
-    public boolean getValue() {
-        if (valueSet)
-            return this.value;
-        else
-            throw new EvaluationException("Variable '"
-                    + name + "' was not initialized.");
-    }
-
-    public void accept(ExpressionNodeVisitor visitor) {
-        visitor.visit(this);
-    }
-
-    public String getName() {
-        return this.name;
-    }
+    public void visit(VariableExpressionNode node);
+    public void visit(ConstantExpressionNode node);
+    public void visit(ConjunctionExpressionNode node);
+    public void visit(DisjuctionExpressionNode node);
+    public void visit(ConsequenceExpressionNode node);
+    public void visit(BiconsequenceExpressionNode node);
+    public void visit(NegationExpressionNode node);
 
 }

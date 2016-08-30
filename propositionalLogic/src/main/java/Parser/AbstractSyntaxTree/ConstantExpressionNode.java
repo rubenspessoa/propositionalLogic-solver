@@ -46,4 +46,8 @@ public class ConstantExpressionNode implements ExpressionNode {
     public int getType() {
         return ExpressionNode.CONSTANT_NODE;
     }
+
+    public void accept(ExpressionNodeVisitor visitor) {
+        visitor.visit(this);
+    }
 }

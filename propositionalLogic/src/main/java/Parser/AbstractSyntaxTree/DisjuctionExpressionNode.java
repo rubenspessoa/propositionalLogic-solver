@@ -50,4 +50,11 @@ public class DisjuctionExpressionNode extends SequenceExpressionNode {
         }
         return answer;
     }
+
+    public void accept(ExpressionNodeVisitor visitor) {
+        visitor.visit(this);
+        for (Term t: terms)
+            t.expression.accept(visitor);
+    }
+
 }

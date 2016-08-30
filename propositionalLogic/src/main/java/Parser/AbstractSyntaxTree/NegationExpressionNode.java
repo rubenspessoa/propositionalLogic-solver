@@ -40,8 +40,11 @@ public class NegationExpressionNode implements ExpressionNode {
         return ExpressionNode.NEG_NODE;
     }
 
-    @Override
     public boolean getValue() throws Exception {
         return (!this.expression.getValue());
+    }
+
+    public void accept(ExpressionNodeVisitor visitor) {
+        visitor.visit(this);
     }
 }
