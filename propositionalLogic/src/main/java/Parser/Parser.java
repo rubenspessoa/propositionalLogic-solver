@@ -37,6 +37,7 @@
 
 package Parser;
 
+import Parser.AbstractSyntaxTree.*;
 import java.util.LinkedList;
 
 /**
@@ -66,11 +67,11 @@ public class Parser {
      *         expression tree made out of ExpressionNode objects
      */
 
-    public void parse(String expression) throws Exception {
+    public ExpressionNode parse(String expression) throws Exception {
         Tokenizer tokenizer = Tokenizer.getExpressionTokenizer();
         tokenizer.tokenize(expression);
         LinkedList<Token> tokens = tokenizer.getTokens();
-        this.parse(tokens);
+        return this.parse(tokens);
     }
 
     /**
@@ -82,85 +83,125 @@ public class Parser {
      * @return the internal representation of the expression in form of an
      *         expression tree made out of ExpressionNode objects
      */
-    private void parse(LinkedList<Token> tokens) throws Exception {
+    private ExpressionNode parse(LinkedList<Token> tokens) throws Exception {
 
         // implementing a recursive descent parser
         this.tokens = (LinkedList<Token>) tokens.clone();
         lookahead = this.tokens.getFirst();
 
         // top level non-terminal is expression
-        expression();
+        ExpressionNode expr = expression();
 
         if (lookahead.token != Token.EPSILON)
             throw new ParserException("Unexpected symbol" + lookahead + "found");
 
+        return expr;
+
     }
 
     /** handles the non-terminal expression */
-    private void expression() throws Exception {
+    private ExpressionNode expression() throws Exception {
         // only one rule
-        // expression -> argument bicons_op
-        cons();
-        biconsOp();
+        // expression -> cons bicons_op
+        ExpressionNode c = cons();
+        return biconsOp(c);
     }
 
     /** handles the non-terminal bicons */
-    private void biconsOp() throws Exception {
+    private ExpressionNode biconsOp(ExpressionNode expr) throws Exception {
         // biconsOp -> BICONSEQ cons biconsOp
         if (lookahead.token == Token.BICONSEQ) {
             nextToken();
-            cons();
-            biconsOp();
-        } else {
-            // EPSILON
+            ExpressionNode c = cons();
+            BiconsequenceExpressionNode biconseq = new BiconsequenceExpressionNode(expr, c);
+            return biconsOp(biconseq);
         }
+
+        return expr;
+    }
+
+    /** handles the non-terminal cons */
+    private ExpressionNode cons() throws Exception {
+        // cons -> disj consOp
+        ExpressionNode d = disj();
+        return consOp(d);
+    }
+
+    /** handles the non-terminal consOp */
+    private ExpressionNode consOp(ExpressionNode expr) throws Exception {
+        // consOp -> CONSEQ disj consOp
+        if (lookahead.token == Token.CONSEQ) {
+            nextToken();
+            ExpressionNode d = disj();
+            ConsequenceExpressionNode conseq = new ConsequenceExpressionNode(expr, d);
+            return consOp(conseq);
+        }
+
+        return expr;
+    }
+
+    /** handles the non-terminal disj */
+    private ExpressionNode disj() throws Exception {
+        // disj -> conj disjOp
+        ExpressionNode c = conj();
+        return disjOp(c);
+    }
+
+    /** handles the non-terminal disjOp */
+    private ExpressionNode disjOp(ExpressionNode expr) throws Exception {
+        // disjOp -> DISJ conj disjOp
+        if (lookahead.token == Token.DISJ) {
+            DisjuctionExpressionNode disj = new DisjuctionExpressionNode(expr);
+            nextToken();
+            ExpressionNode c = conj();
+            disj.add(c);
+            return disjOp(disj);
+        }
+
+        return expr;
+    }
+
+    /** handles the non-terminal conj */
+    private ExpressionNode conj() throws Exception {
+        ExpressionNode a = argument();
+        return conjOp(a);
+    }
+
+    /** handles the non-terminal conjOp */
+    private ExpressionNode conjOp(ExpressionNode expr) throws Exception {
+        // conjOp -> CONJ argument conjOp
+        if (lookahead.token == Token.CONJ) {
+            ConjunctionExpressionNode conj = new ConjunctionExpressionNode(expr);
+            nextToken();
+            ExpressionNode a = argument();
+            conj.add(a);
+            return conjOp(conj);
+        }
+
+        return expr;
     }
 
     /** handles the non-terminal argument */
-    private void argument() throws Exception {
-        // argument -> NEG argument
-        if (lookahead.token == Token.NEG) {
-            nextToken();
-            argument();
-        // argument -> VARIABLE
-        } else if (lookahead.token == Token.VARIABLE) {
-            nextToken();
-        } else if (lookahead.token == Token.BOOL) {
-            nextToken();
-        // argument -> OPENBRACKET expression CLOSEBRACKET
-        } else if (lookahead.token == Token.OPEN_BRACKET) {
-
-            nextToken();
-            expression();
-
-            if (lookahead.token != Token.CLOSE_BRACKET) {
-                throw new ParserException("Closing brackets expected and '" + lookahead.sequence + "' found instead.");
-            }
-
-            nextToken();
-        }
-        /*
+    private ExpressionNode argument() throws Exception {
         // argument -> NEG argument
         if (lookahead.token == Token.NEG) {
             ExpressionNode neg = new NegationExpressionNode();
             nextToken();
             argument();
             return neg;
-        // argument -> VARIABLE
+            // argument -> VARIABLE
         } else if (lookahead.token == Token.VARIABLE) {
-            ExpressionNode var = new VariableExpressionNode();
+            ExpressionNode var = new VariableExpressionNode(lookahead.sequence);
             nextToken();
             return var;
         } else if (lookahead.token == Token.BOOL) {
-            ExpressionNode var = new ConstantExpressionNode();
+            ExpressionNode var = new ConstantExpressionNode(lookahead.sequence);
             nextToken();
             return var;
-        // argument -> OPENBRACKET expression CLOSEBRACKET
+            // argument -> OPENBRACKET expression CLOSEBRACKET
         } else if (lookahead.token == Token.OPEN_BRACKET) {
-
-            ExpressionNode expr = expression();
             nextToken();
-            expression();
+            ExpressionNode expr = expression();
 
             if (lookahead.token != Token.CLOSE_BRACKET) {
                 throw new ParserException("Closing brackets expected and" + lookahead.sequence + "found instead.");
@@ -168,65 +209,10 @@ public class Parser {
 
             nextToken();
             return expr;
+        } else if (lookahead.token == Token.EPSILON) {
+            throw new ParserException("Unexpected end of input.");
         } else {
-            // argument -> EPSILON
-        }
-         */
-    }
-
-    /** handles the non-terminal cons */
-    private void cons() throws Exception {
-        // cons -> disj consOp
-        disj();
-        consOp();
-    }
-
-    /** handles the non-terminal consOp */
-    private void consOp() throws Exception {
-        // consOp -> CONSEQ disj consOp
-        if (lookahead.token == Token.CONSEQ) {
-            nextToken();
-            disj();
-            consOp();
-        } else {
-
-        }
-    }
-
-    /** handles the non-terminal disj */
-    private void disj() throws Exception {
-        // disj -> conj disjOp
-        conj();
-        disjOp();
-    }
-
-    /** handles the non-terminal disjOp */
-    private void disjOp() throws Exception {
-        // disjOp -> DISJ conj disjOp
-        if (lookahead.token == Token.DISJ) {
-            nextToken();
-            conj();
-            disjOp();
-        } else {
-
-        }
-    }
-
-    /** handles the non-terminal conj */
-    private void conj() throws Exception {
-        argument();
-        conjOp();
-    }
-
-    /** handles the non-terminal conjOp */
-    private void conjOp() throws Exception {
-        // conjOp -> CONJ argument conjOp
-        if (lookahead.token == Token.CONJ) {
-            nextToken();
-            argument();
-            conjOp();
-        } else {
-
+            throw new ParserException("Unexpected symbol '" + lookahead.sequence + "' was found.");
         }
     }
 

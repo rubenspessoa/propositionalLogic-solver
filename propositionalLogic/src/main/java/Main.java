@@ -28,9 +28,11 @@ public class Main {
         /* Testing the Parser */
 
         Parser parser = new Parser();
+        ExpressionNode expression;
 
         try {
-            parser.parse(inputTest);
+            expression = parser.parse(inputTest);
+            System.out.println(expression.getValue());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
