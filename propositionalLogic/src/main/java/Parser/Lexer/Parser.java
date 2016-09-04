@@ -35,7 +35,7 @@
  * so feel free to use it in your own projects.
  */
 
-package Parser;
+package Parser.Lexer;
 
 import Parser.AbstractSyntaxTree.*;
 import java.util.LinkedList;

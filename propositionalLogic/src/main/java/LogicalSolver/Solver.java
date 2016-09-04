@@ -2,7 +2,7 @@ package LogicalSolver;
 
 import Parser.AbstractSyntaxTree.BiconsequenceExpressionNode;
 import Parser.AbstractSyntaxTree.ExpressionNode;
-import Parser.Token;
+import Parser.Lexer.Token;
 
 /**
  * Created by rubenspessoa on 30/08/16.

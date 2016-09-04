@@ -1,5 +1,5 @@
-import Parser.*;
 import Parser.AbstractSyntaxTree.*;
+import Parser.Lexer.Parser;
 
 /**
  * Created by rubenspessoa on 06/08/16.

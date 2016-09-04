@@ -26,7 +26,7 @@
  * Modified by rubenspessoa on 06/08/16.
  */
 
-package Parser;
+package Parser.Lexer;
 
 import java.util.LinkedList;
 import java.util.regex.Pattern;
