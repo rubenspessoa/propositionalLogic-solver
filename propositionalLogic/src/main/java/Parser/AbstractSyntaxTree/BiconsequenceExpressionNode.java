@@ -52,4 +52,12 @@ public class BiconsequenceExpressionNode implements ExpressionNode {
         rightTerm.accept(visitor);
     }
 
+    public ExpressionNode getLeftTerm() {
+        return this.leftTerm;
+    }
+
+    public ExpressionNode getRightTerm() {
+        return this.rightTerm;
+    }
+
 }
